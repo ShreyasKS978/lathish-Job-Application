@@ -1,0 +1,45 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:14
+    container_name: lathish_postgres
+    ports:
+      - "6584:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: admin123
+      POSTGRES_DB: job_application_db
+    volumes:
+      - pgdata_lathish:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+
+  backend:
+    build: ./Backend
+    container_name: lathish_backend
+    ports:
+      - "3025:3025"
+    depends_on:
+      - postgres
+
+  employee_form:
+    build: ./Employee_Formfilling
+    container_name: lathish_employee_form
+    ports:
+      - "8101:80"
+
+  hr_form:
+    build: ./HR_FormFilling
+    container_name: lathish_hr_form
+    ports:
+      - "8102:80"
+
+  welcome_page:
+    build: ./Welcome-Page
+    container_name: lathish_welcome_page
+    ports:
+      - "8103:80"
+
+volumes:
+  pgdata_lathish:
+
